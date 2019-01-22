@@ -1,14 +1,23 @@
+html{
+    background-image: url(../img/bus.jpg);
+    background-size: cover;
+}
+
 /* ===============HEADER================ */
 h1{
     text-align: center;
     font-size: 3em;
     border: 2px solid black;
-    margin: 10px;
+    margin: 10px auto 10px auto;
+    width: 30%;
+    background-color: #777;
+    padding: 10px;
 }
 
 header{
-    border: 3px black solid;
-    text-emphasis: bold;
+    width: 80%;
+    margin: 0px auto 0px auto;
+    color: white;
 }
 
 header ol{
@@ -22,14 +31,16 @@ header li{
 
 /* ===============MAIN================ */
 main{
-    border: 2px solid red;
     text-align: center;
+    width: 80%;
+    margin: 250px auto 20px auto;
 }
 
 h2{
     font-size: 2em;
     padding: 15px;
     margin: 25px;
+    color: white;
 }
 
 .container{
@@ -38,14 +49,18 @@ h2{
     justify-content: space-evenly;
     align-items: baseline;
     align-content: center;
-    border: solid red 4px;
-    margin: 25px;
+    margin: 25px auto 25px auto;
     padding: 10px;
+    width: 80%;
 }
 
 img{
-    height: 300px;
-    width: 300px;
+    height: 200px;
+    width: 200px;
     border: solid black 2px;
 }
 /* ===============FOOTER================ */
+footer{
+    height: 100px;
+    background-color: #555;
+}
