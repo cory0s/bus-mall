@@ -94,7 +94,7 @@ function handleClick(event){
         }
     }
     totalClicks++;
-    if(totalClicks === 5){
+    if(totalClicks === 25){
         productImg1.removeEventListener('click', handleClick);
         productImg2.removeEventListener('click', handleClick);
         productImg3.removeEventListener('click', handleClick);
