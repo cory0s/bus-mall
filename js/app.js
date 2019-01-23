@@ -8,7 +8,14 @@ var productImg1 = document.getElementById('productImg1');
 var productImg2 = document.getElementById('productImg2');
 var productImg3 = document.getElementById('productImg3');
 var canvasChart = document.getElementById('chart');
+var productImgs = [productImg1, productImg2, productImg3];
 canvasChart.style.display = 'none';
+var pic1 = document.getElementById('pic1');
+var pic2 = document.getElementById('pic2');
+var pic3 = document.getElementById('pic3');
+pic1.style.display = 'block';
+pic2.style.display = 'block';
+pic3.style.display = 'block';
 
 //Constructor to make new product objects and push to product array
 function BusProduct(name){
@@ -34,51 +41,68 @@ function getRandomNum(){
 }
 
 //Initialize dummy variables for duplicate checks
-var num1 = allProducts.length + 1;
-var num2 = allProducts.length + 1;
-var num3 = allProducts.length + 1;
+// var num1 = allProducts.length + 1;
+// var num2 = allProducts.length + 1;
+// var num3 = allProducts.length + 1;
+var oldRandoms = [];
+function populateDummy(){
+    for(var i=0; i<productImgs.length; i++){
+        oldRandoms.push(-1);
+    }
+}
+populateDummy();
+
+//Function to create new random index
+function createRandoms(){
+    var newRandoms = [];
+    while(newRandoms.length < oldRandoms.length){
+        var randomNum = getRandomNum();
+        if(newRandoms.indexOf(randomNum) === -1 && oldRandoms.indexOf(randomNum) === -1){
+            newRandoms.unshift(randomNum);
+        }
+    }
+    oldRandoms = newRandoms;
+}
 
 //Show (3) random, non duplicate products
 function showRandomProducts(){
-    // for(var i=0; i<3; i++){
-    //     var randomNum = getRandomNum();
-    //     if(duplicates.includes(randomNum) === false){
-    //         duplicates.push(randomNum);
-    //     } else {
-    //         randomNum = getRandomNum();
-    //         i--;
-    //     }
+    createRandoms();
+    for(var k=0; k<oldRandoms.length; k++){
+        productImgs[k].src = allProducts[oldRandoms[k]].filepath;
+        productImgs[k].alt = allProducts[oldRandoms[k]].name;
+        productImgs[k].name = allProducts[oldRandoms[k]].name;
+        allProducts[oldRandoms[k]].shows++;
+    }
+
+    // var randomNum = getRandomNum();
+    // while(randomNum === num1 || randomNum === num2 || randomNum === num3){
+    //     randomNum = getRandomNum();
     // }
+    // num1 = randomNum;
+    // productImg1.src = allProducts[num1].filepath;
+    // productImg1.alt = allProducts[num1].name;
+    // productImg1.name = allProducts[num1].name;
+    // allProducts[num1].shows++;
 
-    var randomNum = getRandomNum();
-    if(randomNum === num1 || randomNum === num2 || randomNum === num3){
-        randomNum = getRandomNum();
-    }
-    num1 = randomNum;
-    productImg1.src = allProducts[num1].filepath;
-    productImg1.alt = allProducts[num1].name;
-    productImg1.name = allProducts[num1].name;
-    allProducts[num1].shows++;
+    // var randomNum2 = getRandomNum();
+    // while(randomNum2 === num1 || randomNum2 === num2 || randomNum2 === num3){
+    //     randomNum2 = getRandomNum();
+    // }
+    // num2 = randomNum2;
+    // productImg2.src = allProducts[num2].filepath;
+    // productImg2.alt = allProducts[num2].name;
+    // productImg2.name = allProducts[num2].name;
+    // allProducts[num2].shows++;
 
-    var randomNum2 = getRandomNum();
-    if(randomNum2 === num1 || randomNum2 === num2 || randomNum2 === num3){
-        randomNum2 = getRandomNum();
-    }
-    num2 = randomNum2;
-    productImg2.src = allProducts[num2].filepath;
-    productImg2.alt = allProducts[num2].name;
-    productImg2.name = allProducts[num2].name;
-    allProducts[num2].shows++;
-
-    var randomNum3 = getRandomNum();
-    if(randomNum3 === num1 || randomNum3 === num2 || randomNum3 === num3){
-        randomNum3 = getRandomNum();
-    }
-    num3 = randomNum3;
-    productImg3.src = allProducts[num3].filepath;
-    productImg3.alt = allProducts[num3].name;
-    productImg3.name = allProducts[num3].name;
-    allProducts[num3].shows++;
+    // var randomNum3 = getRandomNum();
+    // while(randomNum3 === num1 || randomNum3 === num2 || randomNum3 === num3){
+    //     randomNum3 = getRandomNum();
+    // }
+    // num3 = randomNum3;
+    // productImg3.src = allProducts[num3].filepath;
+    // productImg3.alt = allProducts[num3].name;
+    // productImg3.name = allProducts[num3].name;
+    // allProducts[num3].shows++;
 }
 showRandomProducts();
 
@@ -100,6 +124,9 @@ function handleClick(event){
         productImg3.removeEventListener('click', handleClick);
         totalClicks = 0;
         canvasChart.style.display='block';
+        pic1.style.display='none';
+        pic2.style.display='none';
+        pic3.style.display='none';
     }
 
     updateChart();
@@ -112,7 +139,7 @@ productImg1.addEventListener('click', handleClick);
 productImg2.addEventListener('click', handleClick);
 productImg3.addEventListener('click', handleClick);
 
-
+//Function to update chart with new click data
 function updateChart(){
     for(var i=0; i<allProducts.length; i++){
         clickArray[i]=allProducts[i].clicks;
@@ -157,13 +184,6 @@ var data = {
             borderColor: [
                 'black'
             ],
-            hoverBackgroundColor: [
-                'darkgreen',
-                'darkgreen',
-                'darkgreen',
-                'darkgreen',
-                'darkgreen'
-            ]
         }]
 };
 
@@ -171,7 +191,7 @@ var data = {
 //Create function to draw chart using options and data lists
 function drawChart(){
     var ctx = document.getElementById('productChart').getContext('2d');
-    var productChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'horizontalBar',
         data: data,
 
