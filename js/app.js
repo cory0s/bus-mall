@@ -7,15 +7,11 @@ var imgId = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'ch
 var productImg1 = document.getElementById('productImg1');
 var productImg2 = document.getElementById('productImg2');
 var productImg3 = document.getElementById('productImg3');
+var clearButton = document.getElementById('clearButton');
+var newButton = document.getElementById('newButton');
 var canvasChart = document.getElementById('chart');
 var productImgs = [productImg1, productImg2, productImg3];
 canvasChart.style.display = 'none';
-var pic1 = document.getElementById('pic1');
-var pic2 = document.getElementById('pic2');
-var pic3 = document.getElementById('pic3');
-pic1.style.display = 'block';
-pic2.style.display = 'block';
-pic3.style.display = 'block';
 
 //Constructor to make new product objects and push to product array
 function BusProduct(name){
@@ -32,18 +28,13 @@ function buildProducts(){
         new BusProduct(imgId[i]);
     }
 }
-buildProducts();
-
 
 //Generic random number generator
 function getRandomNum(){
     return (Math.floor(Math.random() * allProducts.length));
 }
 
-//Initialize dummy variables for duplicate checks
-// var num1 = allProducts.length + 1;
-// var num2 = allProducts.length + 1;
-// var num3 = allProducts.length + 1;
+//Initialize dummy array for duplicate checks
 var oldRandoms = [];
 function populateDummy(){
     for(var i=0; i<productImgs.length; i++){
@@ -73,64 +64,33 @@ function showRandomProducts(){
         productImgs[k].name = allProducts[oldRandoms[k]].name;
         allProducts[oldRandoms[k]].shows++;
     }
-
-    // var randomNum = getRandomNum();
-    // while(randomNum === num1 || randomNum === num2 || randomNum === num3){
-    //     randomNum = getRandomNum();
-    // }
-    // num1 = randomNum;
-    // productImg1.src = allProducts[num1].filepath;
-    // productImg1.alt = allProducts[num1].name;
-    // productImg1.name = allProducts[num1].name;
-    // allProducts[num1].shows++;
-
-    // var randomNum2 = getRandomNum();
-    // while(randomNum2 === num1 || randomNum2 === num2 || randomNum2 === num3){
-    //     randomNum2 = getRandomNum();
-    // }
-    // num2 = randomNum2;
-    // productImg2.src = allProducts[num2].filepath;
-    // productImg2.alt = allProducts[num2].name;
-    // productImg2.name = allProducts[num2].name;
-    // allProducts[num2].shows++;
-
-    // var randomNum3 = getRandomNum();
-    // while(randomNum3 === num1 || randomNum3 === num2 || randomNum3 === num3){
-    //     randomNum3 = getRandomNum();
-    // }
-    // num3 = randomNum3;
-    // productImg3.src = allProducts[num3].filepath;
-    // productImg3.alt = allProducts[num3].name;
-    // productImg3.name = allProducts[num3].name;
-    // allProducts[num3].shows++;
 }
-showRandomProducts();
-
 
 //Create click handler function
 var totalClicks = 0;
 function handleClick(event){
     var product = event.target.name;
-    console.log(event.target.name);
     for(var i=0; i<allProducts.length; i++){
         if(allProducts[i].name === product){
             allProducts[i].clicks++;
         }
     }
     totalClicks++;
-    if(totalClicks === 25){
+    updateChart();
+
+    if(totalClicks === 5){
         productImg1.removeEventListener('click', handleClick);
         productImg2.removeEventListener('click', handleClick);
         productImg3.removeEventListener('click', handleClick);
         totalClicks = 0;
         canvasChart.style.display='block';
-        pic1.style.display='none';
-        pic2.style.display='none';
-        pic3.style.display='none';
+        productImg1.style.display='none';
+        productImg2.style.display='none';
+        productImg3.style.display='none';
+        localStorage.setItem('products', JSON.stringify(allProducts));
+        drawChart();
     }
 
-    updateChart();
-    drawChart();
     showRandomProducts();
 }
 
@@ -140,17 +100,14 @@ productImg2.addEventListener('click', handleClick);
 productImg3.addEventListener('click', handleClick);
 
 //Function to update chart with new click data
+var clickArray=[];
+var productArray=[];
 function updateChart(){
     for(var i=0; i<allProducts.length; i++){
         clickArray[i]=allProducts[i].clicks;
         productArray[i]=allProducts[i].name;
     }
 }
-
-
-//Create chart data
-var clickArray=[];
-var productArray=[];
 
 //Data list for chart function input
 var data = {
@@ -231,3 +188,31 @@ function drawChart(){
         }
     });
 }
+
+//Create function to check for and store local data
+var storedProducts = [];
+function storeLocal(){
+    if(localStorage.getItem('products')){
+        storedProducts = JSON.parse(localStorage.getItem('products'));
+        allProducts = storedProducts;
+    } else {
+        buildProducts();
+    }
+}
+
+//Create clear button functionality
+clearButton.addEventListener('click', handleClear);
+function handleClear(event){
+    localStorage.clear();
+    clickArray=[];
+    drawChart();
+}
+
+//Create new voter button functionality
+newButton.addEventListener('click', handleNew);
+function handleNew(event){
+    location.reload();
+}
+
+storeLocal();
+showRandomProducts();
