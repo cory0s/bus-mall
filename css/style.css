@@ -91,6 +91,24 @@ main ul{
     margin: 20px auto 0px auto;
     width: 80%;
     height: auto;
+    align-items: center;
+}
+
+.button{
+    padding: 10px;
+    display: block;
+    background-color: grey;
+    color: white;
+    border: solid black 4px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 20px;
+    border-radius: 5px;
+    margin: 10px auto 10px auto;
+}
+
+.button:hover{
+    background-color: red;
+    color: white;
 }
 
 /* ===============FOOTER================ */

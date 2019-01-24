@@ -7,6 +7,8 @@ var imgId = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'ch
 var productImg1 = document.getElementById('productImg1');
 var productImg2 = document.getElementById('productImg2');
 var productImg3 = document.getElementById('productImg3');
+var clearButton = document.getElementById('clearButton');
+var newButton = document.getElementById('newButton');
 var canvasChart = document.getElementById('chart');
 var productImgs = [productImg1, productImg2, productImg3];
 canvasChart.style.display = 'none';
@@ -74,7 +76,9 @@ function handleClick(event){
         }
     }
     totalClicks++;
-    if(totalClicks === 25){
+    updateChart();
+
+    if(totalClicks === 5){
         productImg1.removeEventListener('click', handleClick);
         productImg2.removeEventListener('click', handleClick);
         productImg3.removeEventListener('click', handleClick);
@@ -87,7 +91,6 @@ function handleClick(event){
         drawChart();
     }
 
-    updateChart();
     showRandomProducts();
 }
 
@@ -97,16 +100,14 @@ productImg2.addEventListener('click', handleClick);
 productImg3.addEventListener('click', handleClick);
 
 //Function to update chart with new click data
+var clickArray=[];
+var productArray=[];
 function updateChart(){
     for(var i=0; i<allProducts.length; i++){
         clickArray[i]=allProducts[i].clicks;
         productArray[i]=allProducts[i].name;
     }
 }
-
-//Create chart data
-var clickArray=[];
-var productArray=[];
 
 //Data list for chart function input
 var data = {
@@ -188,6 +189,7 @@ function drawChart(){
     });
 }
 
+//Create function to check for and store local data
 var storedProducts = [];
 function storeLocal(){
     if(localStorage.getItem('products')){
@@ -197,5 +199,20 @@ function storeLocal(){
         buildProducts();
     }
 }
+
+//Create clear button functionality
+clearButton.addEventListener('click', handleClear);
+function handleClear(event){
+    localStorage.clear();
+    clickArray=[];
+    drawChart();
+}
+
+//Create new voter button functionality
+newButton.addEventListener('click', handleNew);
+function handleNew(event){
+    location.reload();
+}
+
 storeLocal();
 showRandomProducts();
